@@ -1,5 +1,5 @@
 #Odobenix in a nutshell
-Utilities and games to improve morse skills. Written in C and Python, aimed at linux console users.
+Utilities and games to improve morse skills. Written in C and Python, aimed at linux console users. GPL.
 
 #Programs
 This suite consists of the following software:

@@ -1,0 +1,135 @@
+#!/usr/bin/env python
+
+""" Common CW words trainer.  """
+
+import logging
+import random
+import subprocess
+import readline
+import time
+import datetime
+import argparse
+import os.path
+
+__author__ = "Francois Wisard (HB9FXW)"
+__version__ = "1.0.0"
+
+keybspeed = 0.16 #typing speed, time per key in seconds. 0.16 for average touch typists, 0.25 for typical computer users, 0.12 for professional typers. Formula: 10/wpm
+
+HISCOREFILE='hiscore'
+CW='./cw'
+
+
+words=['de','qth','hr','ur','my','rig','rst','op','name','rpt','wx','dx','is','es','qso','fer','tu','tnx','tks','qrs','qrq','qrm','qro','qrp','qrn','qsb','cuagn','cul','fb','hny','ok','pse','om','dr','73','agn','ant','pwr','sri','qrz?','qsl?','qsl','via','buro','lotw','direct','call','vert','dipole','beam','g5rv','loop','1ttw','qrz','abt','b4','msg','btu','cfm','condx','on','clr','cpy','nr','cpi','dwn','up','enuf','fone','gm','ga','fist','gud','gp','gb','ham','hpe','hw','some','hw?','mni','nil','nw','qru','559','rprt','ge','to','rcvd','sig','all','stn','temp','ufb','vy','wid','xyl','icom','yaesu','kenwood','home','warm','in','cold','band','579','wire','last','info','frm','but','hot','best','also','watts','snow']
+
+maxlevel=len(words)
+level=2
+freq=400
+speed=17
+x = 1
+count = 1
+levelcount = 1
+score =0
+points =0
+pscore = 0 
+hiscore =0
+
+parser=argparse.ArgumentParser(description='Train recognition of common CW words.',epilog='Version '+__version__+' by '+__author__)
+parser.add_argument('-d',help='debug mode',action='store_true')
+parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int)
+parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int)
+parser.add_argument('-l',help='starting level (2-'+str(maxlevel)+') (default: %(default)s)',default=level,type=int)
+parser.add_argument('-p',help='print the words of this level and then quits',action='store_true')
+args=parser.parse_args()
+
+if args.d: 
+    logging.basicConfig(filename='debug.log',level=logging.DEBUG)
+logging.debug('===== New session. Maxlevel: %s, freq: %s, speed: %s, level: %s',maxlevel,freq,speed,level)
+
+if (args.f > 300) and (args.f<1401): 
+    freq=args.f
+if (args.s > 5) and (args.s < 101): 
+    speed=args.s
+if (args.l > 1) and(args.l <= maxlevel): 
+    level=args.l
+if args.p: 
+    print("The words in level {} are:\n".format(level))
+    print(" ".join(words[:level]))
+    exit(0)
+
+if not os.path.isfile(CW):
+    print("Unable to find the morse generator ({}). Check your install.".format(CW))
+    exit(10)
+print("Enter what you hear or 'q' to quit.\n\n")
+
+while x == 1 :
+    logging.debug('--- levelcount: %s',levelcount)
+    logging.debug('-- %s',count)
+    word=random.choice(words[:level])
+    subprocess.run([CW,word,  str(speed), str(freq)])
+    print("Level: {} Score: {}".format(level,pscore))
+    timea=time.perf_counter()
+    
+    cmd=input('>? ')
+    cmd=cmd.casefold()
+    timeb=time.perf_counter()
+    responsetime=timeb-timea
+    responsetime=int(responsetime*100)/100
+    logging.debug("Word: %s entered: %s.",word,cmd)
+    logging.debug("responsetime: %s",responsetime)
+
+    if (cmd == 'q') or (cmd=='quit') or (cmd=='exit'):
+        subprocess.run([CW,'TU 73',str(speed+5),'380'])
+        exit(0)
+    limitgood=0.5+ keybspeed*(len(word)+1)
+    limitavg=1.4+ keybspeed*(len(word)+1)
+    if cmd == word:
+        if responsetime <= limitgood:
+            print("    Correct.")
+            logging.debug("ok, limit was %s", limitgood)
+            score += 10
+            points = int(1000 * (limitgood-responsetime))
+        elif responsetime <= limitavg:
+            print("    Correct, but slow.")
+            logging.debug("bit slow, limit was %s", limitgood)
+            score += 8
+            points = int(100 * (limitavg-responsetime))
+        else:
+            print("    Too slow.")
+            logging.debug("too slow, limit was %s",limitavg)
+            score += 2
+            points = int(40/(responsetime**2) )
+        logging.debug("Points: %s score: %s",points,score)
+        pscore += points * level * (speed ** 1.5) / 100
+        pscore = int(pscore)
+    else:
+        print("Wrong, it was {}.".format(word))
+    if levelcount >= 9:
+        print("########################################")
+        print("#   Score: {}    Hi-Score: {}".format(pscore,hiscore))
+        logging.debug("Score : %s Hiscore : %s",pscore,hiscore)
+        if score > 71: #7.9* maxlevelcount
+            if level < maxlevel:
+                level += 1
+                print("#   Up to level {}.".format(level))
+            else:
+                print("#   Max level, you're the boss!")
+        elif score < 27: # 3* maxlevelcount
+            if level < 3:
+                print("#   Come on...")
+            else:
+                level -= 1
+                print("#   Down to level {}.".format(level))
+        print("########################################")
+        levelcount=1
+        score=0
+        if pscore > hiscore:
+            hiscore=pscore
+            with open(HISCOREFILE,'a') as hiscorefh:
+                hiscorefh.write(datetime.datetime.now().isoformat()+' ')
+                hiscorefh.write(str(hiscore)+' L'+str(level)+' S'+str(speed)+'\n')
+                hiscorefh.close()
+        pscore = 0
+    count += 1
+    levelcount +=1
+

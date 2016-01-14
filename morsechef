@@ -1,0 +1,156 @@
+#!/usr/bin/env python
+
+""" Game to improve morse receiving skills """
+
+import logging
+import random
+import subprocess
+import readline
+import time
+import datetime
+import argparse
+import os.path
+
+__author__ = "Francois Wisard (HB9FXW)"
+__version__ = "1.0.0"
+
+freq=400
+speed=15
+
+CW='./cw'
+
+def morse(txt):
+    subprocess.run([CW,txt,str(speed),str(freq)])
+
+parser=argparse.ArgumentParser(description='A game to improve your morse receiving skills.',epilog='Version '+__version__+' by '+__author__)
+parser.add_argument('-d',help='debug mode',action='store_true')
+parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int)
+parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int)
+
+args=parser.parse_args()
+
+if args.d: 
+    logging.basicConfig(level=logging.DEBUG)
+    # logging.basicConfig(filename='cookdebug.log',level=logging.DEBUG)
+
+if (args.f > 300) and (args.f<1401): 
+    freq=args.f
+if (args.s > 5) and (args.s < 101): 
+    speed=args.s
+
+if not os.path.isfile(CW):
+    print("Unable to find the morse generator ({}). Check your install.".format(CW))
+    exit(10)
+dishlist=['soup','pie','ice cream','cocktail','salad']
+dish=''
+introlist=['now im cooking ','wait fer my ','next meal is ','we are making ','u will love my ','next dish is ','pse hav some ','ok lets make sum ','time fer ur ']
+introout=[' ok?','',' yum',' dr om', ' oh yea']
+
+food=['sugar','apples','bananas','eggs','flour','butter','milk','vodka','rhum','pepper','vanilla','beef','mushrooms','3 tomatoes','4 turnips','5 nuts','3 ts salt','onions','corn','mustard','ketchup','wine','chocolate','venison','chicken wings','pumpkin','sour cream','strawberries','veal','4 potatoes','ground ginger','5 ts cinnamon','3 garlic cloves','coriander','1 ts canola oil','green cabbage','turkey broth','grated cheese','3 cups rice','beans','pork','bacon','sausage','3 ripe avocados','juiced lime','coconut milk','spinach','honey','white bread','minced liver','5 pears','5 ts peanut butter','a pineapple','roastbeef','a lot of water','whisky','orange juice','lettuce','3 carrots','mashed potatoes','soda','vinegar']
+
+weird=['white spirit','wd40','3 babies','4 tires','5 ts poison','3 screws','sawdust','5 tears','old jeans','earthworms','copper','ammonia','brake fluid','pencils','resistors','a sailboat','3 guitar strings','a doll head','vomit','soap','4 smartphones','cleaning rags','motor oil','kerosene','gasoline','uranium','toothpaste','various trash','paper towels','coconut shell','eyes','sofa','1 ts dirt']
+
+q1=['do u want ','should we put ','what abt ','maybe ','do we try ','hmm ','ok now ','may I put ','drop ','lets add ','dare to add ','es now ','']
+
+
+
+hour=datetime.datetime.now().hour
+if hour > 1 and hour < 12:
+    greet='gm '
+elif hour >= 12 and hour < 18:
+    greet='ga '
+else:
+    greet='ge '
+greet += random.choice(['','om','dr om','my frnd'])
+print("    ***********************************")
+print("    *                                 *")
+print("    * Morse Cooking. Please choose 4  *")
+print("    * ingredients from our selection  *")
+print("    * by answering with yes or no     *")
+print("    * to each proposal.               *")
+print("    *                                 *")
+print("    * Check your audio settings if    *")
+print("    * you don't hear anything.        *")
+print("    *                                 *")
+print("    ***********************************")
+logging.debug(greet)
+morse(greet)
+
+x=1
+while(x==1):
+    question=''
+    rnd=0
+    ingredients=[]
+    stuff=''
+    dish=random.choice(dishlist)
+    stuff=random.choice(introlist)+dish+random.choice(introout)+" ="
+    logging.debug('intro: %s', stuff)
+    morse(stuff) # let's introduce the recipe
+    q2=[' in there?',' in the pot?',' in ur '+dish+'?', ' in the recipe?', ' in the '+dish+'?',' for a change?',' or not?','?',' my frnd?']
+    while (len(ingredients)<4):
+        notok=1
+        logging.debug('while loop')
+        rnd=random.random()
+        if rnd > 0.80:
+            stuff=random.choice(weird)
+        else:
+            stuff=random.choice(food)
+        question=random.choice(q1)+stuff+random.choice(q2)
+        while(notok==1):
+            cmd=''
+            logging.debug('q: %s',question)
+            morse(question)
+            cmd=input('>?')
+            cmd=cmd.casefold()
+            if cmd=='c' or cmd=='yes' or cmd=='y':
+                notok=0
+                ingredients.append(stuff)
+            elif cmd=='n' or cmd=='no':
+                notok=0
+            elif 'qrs' in cmd:
+                if speed > 3 :
+                    speed-=2
+                else:
+                    morse('come on')
+            elif 'qrq' in cmd:
+                if speed < 101:
+                    speed+=2
+                else:
+                    morse('too fast for me')
+            elif 'agn' in cmd or 'rpt' in cmd:
+                notok=1
+            elif 'qrt' in cmd or 'quit' in cmd or 'exit' in cmd:
+                speed+=5
+                freq=380
+                morse('cul 73')
+                exit(0)
+            elif 'help' in cmd or cmd=='h':
+                print('Answer with yes/y/c or no/n. You may also ask me to qrs, qrq, rpt or qrt.')
+            else:
+                morse('sri om no cpy')
+                logging.debug('sri om no cpy')
+    # recipe end
+
+
+    print("You made a "+dish+" with these ingredients:\n")
+    if dish=='salad':
+        print("  * oil and vinegar")
+    elif dish=='ice cream':
+        print("  * "+random.choice(['frozen milk','frozen yogurt','whipped cream']))
+    elif dish=='soup':
+        print("  * water")
+    elif dish=='pie':
+        print("  * dough")
+    elif dish=='cocktail':
+        print("  * "+random.choice(['gin','Martini','Coca','whisky','beer','lime juice']))
+    for i in ingredients:
+        print("  * "+i)
+    print('\n')
+    stuff=random.choice(['bon appetit','u sure u wanna eat that?','hmmm','yummy','looks delicious to me','best '+dish+' ever', 'ive seen worse','gross','yuck','ouch','still hungry?','impressive','seems fine','ufb recipe om','fb on ur cooking','better throw it away','another satisfied om','great job','well done','no comment','eat it all','dare to taste?'])
+    logging.debug(stuff)
+    morse(stuff)
+    stuff=input('Press Enter to continue')
+
+
+            
+

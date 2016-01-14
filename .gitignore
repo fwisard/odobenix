@@ -1,0 +1,6 @@
+*.[oa]
+*~
+*.log
+cw
+qso.py
+hiscore

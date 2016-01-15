@@ -32,6 +32,8 @@ The scoring system is adjusted for an average touch typer. 'Hunt & peck' typers 
       -l LEVEL    starting level (2-116) (default: 2)
       -p          print the words of this level and then quits
 
+Default values may be changed by editing the configuration section at the top of the file.
+
 ##morsechef   
 A game to improve your morse copying skills. Choose 4 appropriate ingredients among those proposed.
 
@@ -48,7 +50,9 @@ Recognized commands: qrq, qrs, rpt, quit, help.
       -f FREQ     frequency (300-1400) (default: 400)
       -s SPEED    speed in wpm (5-100) (default: 15)
 
+Default values may be changed by editing the configuration section at the top of the file.
 
-More to come...
+## ...
+More to come...  
 
 73 de hb9fxw.

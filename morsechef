@@ -14,10 +14,14 @@ import os.path
 __author__ = "Francois Wisard (HB9FXW)"
 __version__ = "1.0.0"
 
-freq=400
-speed=15
+# Configuration begins here ##################################################
 
-CW='./cw'
+freq=400 # Default sidetone, in Hz. Change this according to your taste.
+speed=15 # Default speed, in wpm. Change this according to your taste/skill.
+
+CW='./cw' # path and name of the morse generator executable. 
+
+# Configuration ends here #####################################################
 
 def morse(txt):
     subprocess.run([CW,txt,str(speed),str(freq)])

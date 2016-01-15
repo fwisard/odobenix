@@ -1,5 +1,5 @@
 #Odobenix in a nutshell
-Utilities and games to improve morse skills. Written in C and Python, aimed at linux console users. GPL.
+Utilities and games to improve morse skills. Written in C and Python, aimed at linux console users who want to raise their CW speed or head copy. GPL.
 
 #Programs
 This suite consists of the following software:
@@ -34,6 +34,8 @@ The scoring system is adjusted for an average touch typer. 'Hunt & peck' typers 
 
 ##morsechef   
 A game to improve your morse copying skills. Choose 4 appropriate ingredients among those proposed.
+
+Recognized commands: qrq, qrs, rpt, quit, help.
 
 
     usage: morsechef [-h] [-d] [-f F] [-s S]

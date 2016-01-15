@@ -10,9 +10,10 @@ import time
 import datetime
 import argparse
 import os.path
+import os
 
 __author__ = "Francois Wisard (HB9FXW)"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 # Configuration begins here ##################################################
 
@@ -66,6 +67,14 @@ if not os.path.isfile(CW):
     print("Unable to find the morse generator ({}). Check your install.".format(CW))
     exit(10)
 print("Enter what you hear or 'q' to quit.\n\n")
+
+if os.path.isfile(HISCOREFILE):
+    try :
+        hiscore=int(os.popen("tail -1 "+HISCOREFILE).readlines()[0].split()[1]) # read 2nd field of last line
+        logging.debug('hiscore loaded: %s', hiscore)
+    except:
+        print("Oops. Unknown error while reading hiscore file.")
+        logging.debug('error while loading hiscore file')
 
 while x == 1 :
     logging.debug('--- levelcount: %s',levelcount)

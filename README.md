@@ -7,11 +7,9 @@ This suite consists of the following software:
 ##cw
 An audio morse generator, for PulseAudio or OSS. You need to compile it first (just type 'make').  
 
-Text to audio morse utility by F. Wisard, HB9FXW, based on
-qrq v0.3.1  (c) 2006-2013 Fabian Kurz, DJ1YFK.
+    Text to audio morse utility by F. Wisard, HB9FXW, based on qrq v0.3.1  (c) 2006-2013 Fabian Kurz, DJ1YFK.
 
-This is free software, and you are welcome to redistribute it
-under certain conditions (see COPYING).
+    This is free software, and you are welcome to redistribute it under certain conditions (see COPYING).
 
     Usage: cw TEXT [wpm] [freq]
     with wpm as the word per minute speed and freq as the audio frequency.

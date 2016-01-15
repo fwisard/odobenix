@@ -36,9 +36,9 @@ hiscore =0
 
 parser=argparse.ArgumentParser(description='Train recognition of common CW words.',epilog='Version '+__version__+' by '+__author__)
 parser.add_argument('-d',help='debug mode',action='store_true')
-parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int)
-parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int)
-parser.add_argument('-l',help='starting level (2-'+str(maxlevel)+') (default: %(default)s)',default=level,type=int)
+parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int,metavar='FREQ')
+parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
+parser.add_argument('-l',help='starting level (2-'+str(maxlevel)+') (default: %(default)s)',default=level,type=int,metavar='LEVEL')
 parser.add_argument('-p',help='print the words of this level and then quits',action='store_true')
 args=parser.parse_args()
 

@@ -27,9 +27,9 @@ The scoring system is adjusted for an average touch typer. 'Hunt & peck' typers 
     optional arguments:
       -h, --help  show this help message and exit
       -d          debug mode
-      -f F        frequency (300-1400) (default: 400)
-      -s S        speed in wpm (5-100) (default: 17)
-      -l L        starting level (2-116) (default: 2)
+      -f FREQ     frequency (300-1400) (default: 400)
+      -s SPEED    speed in wpm (5-100) (default: 17)
+      -l LEVEL    starting level (2-116) (default: 2)
       -p          print the words of this level and then quits
 
 ##morsechef   
@@ -45,8 +45,8 @@ Recognized commands: qrq, qrs, rpt, quit, help.
     optional arguments:
       -h, --help  show this help message and exit
       -d          debug mode
-      -f F        frequency (300-1400) (default: 400)
-      -s S        speed in wpm (5-100) (default: 15)
+      -f FREQ     frequency (300-1400) (default: 400)
+      -s SPEED    speed in wpm (5-100) (default: 15)
 
 
 More to come...

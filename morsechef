@@ -24,8 +24,8 @@ def morse(txt):
 
 parser=argparse.ArgumentParser(description='A game to improve your morse receiving skills.',epilog='Version '+__version__+' by '+__author__)
 parser.add_argument('-d',help='debug mode',action='store_true')
-parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int)
-parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int)
+parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int,metavar='FREQ')
+parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
 
 args=parser.parse_args()
 

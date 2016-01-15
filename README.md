@@ -20,7 +20,7 @@ Common CW words trainer. Enter the words you hear, as fast as possible. If you'r
 The scoring system is adjusted for an average touch typer. 'Hunt & peck' typers or professional touch typers may want to tweak the appropriate variable in the source code.
 
 
-    usage: kochwords [-h] [-d] [-f F] [-s S] [-l L] [-p]
+    usage: kochwords [-h] [-d] [-f FREQ] [-s SPEED] [-l LEVEL] [-p]
 
     Train recognition of common CW words.
 
@@ -38,7 +38,7 @@ A game to improve your morse copying skills. Choose 4 appropriate ingredients am
 Recognized commands: qrq, qrs, rpt, quit, help.
 
 
-    usage: morsechef [-h] [-d] [-f F] [-s S]
+    usage: morsechef [-h] [-d] [-f FREQ] [-s SPEED]
 
     A game to improve your morse receiving skills.
 

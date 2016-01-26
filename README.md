@@ -15,7 +15,7 @@ An audio morse generator, for PulseAudio or OSS. You need to compile it first (j
     with wpm as the word per minute speed and freq as the audio frequency.
 
 ##kochwords  
-Common CW words trainer. Enter the words you hear, as fast as possible. If you're quick enough and thus prove your skill, the level will raise and there will be more words.
+Common CW words trainer. Enter the words you hear, as fast as possible. If you're quick enough and thus prove your skill, the level will raise and there will be more words. 
 
 The scoring system is adjusted for an average touch typer. 'Hunt & peck' typers or professional touch typers may want to tweak the appropriate variable in the source code.
 
@@ -31,6 +31,8 @@ The scoring system is adjusted for an average touch typer. 'Hunt & peck' typers 
       -s SPEED    speed in wpm (5-100) (default: 17)
       -l LEVEL    starting level (2-116) (default: 2)
       -p          print the words of this level and then quits
+      -r          recent words have more weight
+      -n          no word twice in a row
 
 Default values may be changed by editing the configuration section at the top of the file.
 

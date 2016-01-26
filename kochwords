@@ -13,7 +13,7 @@ import os.path
 import os
 
 __author__ = "Francois Wisard (HB9FXW)"
-__version__ = "1.0.1"
+__version__ = "1.1.0"
 
 # Configuration begins here ##################################################
 
@@ -31,6 +31,7 @@ words=['de','qth','hr','ur','my','rig','rst','op','name','rpt','wx','dx','is','e
 
 # Configuration ends here #####################################################
 
+
 maxlevel=len(words)
 x = 1
 count = 1
@@ -39,6 +40,29 @@ score =0
 points =0
 pscore = 0 
 hiscore =0
+nothrice=['xyzzy','xyzzy']
+recent=0
+
+def newWord(start=0):
+    global word
+    global nothrice
+    f=1
+    while f == 1:
+        word=random.choice(words[start:level])
+        if word != nothrice[1] : # is it the same word as the last one?
+            f=0
+            logging.debug('OK diff than last choice')
+            nothrice[0]=nothrice[1]
+            nothrice[1]=word
+        elif word != nothrice[0] and not args.n: #do we allow twice in a row?
+            #TODO: we should allow twice in a row at level 2
+            f=0
+            logging.debug('OK diff than 2 previous choices')
+            nothrice[0]=nothrice[1]
+            nothrice[1]=word
+        else:
+            # same choice as last two. reroll. 
+            logging.debug('/!\ same choice, reroll')
 
 parser=argparse.ArgumentParser(description='Train recognition of common CW words.',epilog='Version '+__version__+' by '+__author__)
 parser.add_argument('-d',help='debug mode',action='store_true')
@@ -46,11 +70,16 @@ parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',defa
 parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
 parser.add_argument('-l',help='starting level (2-'+str(maxlevel)+') (default: %(default)s)',default=level,type=int,metavar='LEVEL')
 parser.add_argument('-p',help='print the words of this level and then quits',action='store_true')
+parser.add_argument('-r',help='recent words have more weight',action='count',default=0)
+parser.add_argument('-n',help='no word twice in a row',action='store_true')
 args=parser.parse_args()
 
 if args.d: 
-    logging.basicConfig(filename='debug.log',level=logging.DEBUG)
+    logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(filename='debug.log',level=logging.DEBUG)
 logging.debug('===== New session. Maxlevel: %s, freq: %s, speed: %s, level: %s',maxlevel,freq,speed,level)
+
+recent=args.r
 
 if (args.f > 300) and (args.f<1401): 
     freq=args.f
@@ -79,7 +108,15 @@ if os.path.isfile(HISCOREFILE):
 while x == 1 :
     logging.debug('--- levelcount: %s',levelcount)
     logging.debug('-- %s',count)
-    word=random.choice(words[:level])
+
+    if recent < 1 or level < 3:
+        newWord()
+    else:
+        if random.randint(0,recent) == 0: #the more 'r', the less chance
+            newWord() #any word up to current level
+        else:
+            newWord(level-3) #recent word only
+
     subprocess.run([CW,word,  str(speed), str(freq)])
     print("Level: {} Score: {}".format(level,pscore))
     timea=time.perf_counter()

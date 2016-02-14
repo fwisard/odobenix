@@ -1,0 +1,186 @@
+#!/usr/bin/env python
+
+""" TWILA stands for 'That's What I'd Log/Answer'. It gives short morse sentences and asks for the important info. """
+
+import logging
+import random
+import subprocess
+import readline
+import time
+import datetime
+import argparse
+import os.path
+import os
+
+__author__ = "Francois Wisard (HB9FXW)"
+__version__ = "1.0.0"
+
+# Configuration begins here ##################################################
+
+keybspeed = 0.16 #typing speed, time per key in seconds. 0.16 for average touch typists, 0.25 for typical computer users, 0.12 for professional typers. Formula: 10/wpm
+
+HISCOREFILE='hiscore'
+
+freq=400 # Default sidetone, in Hz. Change this according to your taste.
+speed=18 # Default speed, in wpm. Change this according to your taste/skill.
+
+mybrand='icom'
+mytx='ic 7200'
+myage=43
+myname='Frank'
+mypwr=12
+
+CW='./cw' # path and name of the morse generator executable. 
+
+qth=['paris','berlin','london','glasgow','dublin','riga','moscow','bern','geneva','lyon','bonn','madrid','porto','lisbon','antwerp','athens','barcelona','birmingham','bremen','belgrade','bristol','brussels','bucharest','budapest','cardiff','copenhagen','donetsk','frankfurt','the hague','hamburg','helsinki','istanbul','kazan','kharkiv','kyiv','krakow','leeds','bradford', 'lille','tournai','liverpool','lodz','manchester','marseille','milan','minsk','munich','naples','nice','nottingham','nizhniy novgorod','nuremberg','odesa','oslo','perm','portsmouth','southampton','prague','cologne','rome','rotterdam','saint petersburg','samara','saratov','seville','sofia','stockholm','sheffield','stuttgart','thessaloniki','turin','newcastle','ufa','valencia','vienna','volgograd','warsaw','zagreb','zurich']
+
+names=['leo','ben','jim','mike','jon','john','luke','mark','markus','mat','henry','erik','eric','james','bob','bill','will','kurt','heinrich','hugo','luigi','mario','klaus','aron','gunnar','olaf','jack','daniel','dan','luca','tom','noah', 'emil','david','dave','mirko','andrei','sergey','valery','alex','liam','oskar','emir','berat','georges','paul','angus','oliver','jack','omer','leon','mihai','andrea','matteo','peter','finn','anton','kevin','tarik','frank','victor','mohammed','max','rayan','ivan','ali','luis','samuel','ralf','said','juan','jose','diego','neil','ethan','eric','seb','joe','jo','peng','tao','cheng','wei','muhamad','fahd','art','giorgi','hans','malik']
+
+# Configuration ends here #####################################################
+
+
+x = 1
+count = 1
+levelcount = 1
+score =0
+points =0
+pscore = 0 
+hiscore =0
+nothrice=['xyzzy','xyzzy']
+recent=0
+
+def newWord(start=0):
+    global word
+    global nothrice
+    f=1
+    while f == 1:
+        word=random.choice(words[start:level])
+        if word != nothrice[1] : # is it the same word as the last one?
+            f=0
+            logging.debug('OK diff than last choice')
+            nothrice[0]=nothrice[1]
+            nothrice[1]=word
+        elif word != nothrice[0] and not args.n: #do we allow twice in a row?
+            #TODO: we should allow twice in a row at level 2
+            f=0
+            logging.debug('OK diff than 2 previous choices')
+            nothrice[0]=nothrice[1]
+            nothrice[1]=word
+        else:
+            # same choice as last two. reroll. 
+            logging.debug('/!\ same choice, reroll')
+
+parser=argparse.ArgumentParser(description='Trains your CW skills by giving you short sentences and waiting for an answer or a log entry with the most important info.\n
+        \nExamples:\n- It says "name hr is bob", you should enter "bob"\n- It asks "pse rpt age", you should answer with your age.\n- It says "ant is mag loop on the roof", you should enter "mag loop".',epilog='Version '+__version__+' by '+__author__)
+parser.add_argument('-d',help='debug mode',action='store_true')
+parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int,metavar='FREQ')
+parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
+args=parser.parse_args()
+
+if args.d: 
+    logging.basicConfig(level=logging.DEBUG)
+    #logging.basicConfig(filename='debug.log',level=logging.DEBUG)
+
+if (args.f > 300) and (args.f<1401): 
+    freq=args.f
+if (args.s > 5) and (args.s < 101): 
+    speed=args.s
+
+if not os.path.isfile(CW):
+    print("Unable to find the morse generator ({}). Check your install.".format(CW))
+    exit(10)
+
+print("Answer, or log the given info. Type 'q' to quit.\n\n")
+
+while x == 1 :
+    logging.debug('-----')
+
+    alea=random.randint(1,12)
+    if alea==1: #name
+        cpuname=random.choice(names)
+        if random.random()>0.3: # doubling the name is common
+            cpuinfo+=' '+cpuinfo
+        qso=random.choice(['name hr is '+cpuinfo,'op '+cpuinfo,'my name is '+cpuinfo,'name is '+cpuinfo,'name '+cpuinfo])
+    elif alea==2: #rst
+        if random.random()>0.6: # 599 is unfortunately very common
+            cpuinfo=random.choice(['5nn','5nn 5nn','599 599','599 5nn'])
+        elif random.random()>0.5: # these should be common too
+            cpuinfo=random.choice(['579','559','539'])
+            cpuinfo+=' '+cpuinfo #doubling
+        else:
+            cpuinfo=random.choice(['4','5'])+str(random.randint(1,9))+str(random.randint(1,9))
+            cpuinfo+=' '+cpuinfo #doubling
+        qso=random.choice(['ur rst is '+cpuinfo,'ur '+cpuinfo,'rprt is '+cpuinfo,'rst '+cpuinfo])
+    elif alea==3: #age
+        cpuinfo=str(random.randint(10,110))
+        qso=random.choice(['age hr '+cpuinfo,'I am '+cpuinfo+' years old','my age is '+cpuinfo+' '+cpuinfo,'age '+cpuinfo+' '+cpuinfo])
+
+
+
+    subprocess.run([CW,word,  str(speed), str(freq)])
+    print("Level: {} Score: {}".format(level,pscore))
+    timea=time.perf_counter()
+    
+    cmd=input('>? ')
+    cmd=cmd.casefold()
+    timeb=time.perf_counter()
+    responsetime=timeb-timea
+    responsetime=int(responsetime*100)/100
+    logging.debug("Word: %s entered: %s.",word,cmd)
+    logging.debug("responsetime: %s",responsetime)
+
+    if (cmd == 'q') or (cmd=='quit') or (cmd=='exit'):
+        subprocess.run([CW,'TU 73',str(speed+5),'380'])
+        exit(0)
+    limitgood=0.5+ keybspeed*(len(word)+1)
+    limitavg=1.4+ keybspeed*(len(word)+1)
+    if cmd == word:
+        if responsetime <= limitgood:
+            print("    Correct.")
+            logging.debug("ok, limit was %s", limitgood)
+            score += 10
+            points = int(1000 * (limitgood-responsetime))
+        elif responsetime <= limitavg:
+            print("    Correct, but slow.")
+            logging.debug("bit slow, limit was %s", limitgood)
+            score += 8
+            points = int(100 * (limitavg-responsetime))
+        else:
+            print("    Too slow.")
+            logging.debug("too slow, limit was %s",limitavg)
+            score += 2
+            points = int(40/(responsetime**2) )
+        logging.debug("Points: %s score: %s",points,score)
+        pscore += points * level * (speed ** 1.5) / 100
+        pscore = int(pscore)
+    else:
+        print("Wrong, it was {}.".format(word))
+    if levelcount >= 9:
+        print("########################################")
+        print("#   Score: {}    Hi-Score: {}".format(pscore,hiscore))
+        logging.debug("Score : %s Hiscore : %s",pscore,hiscore)
+        if score > 71: #7.9* maxlevelcount
+            if level < maxlevel:
+                level += 1
+                print("#   Up to level {}.".format(level))
+            else:
+                print("#   Max level, you're the boss!")
+        elif score < 27: # 3* maxlevelcount
+            if level < 3:
+                print("#   Come on...")
+            else:
+                level -= 1
+                print("#   Down to level {}.".format(level))
+        print("########################################")
+        levelcount=1
+        score=0
+        if pscore > hiscore:
+            hiscore=pscore
+            with open(HISCOREFILE,'a') as hiscorefh:
+                hiscorefh.write(datetime.datetime.now().isoformat()+' ')
+                hiscorefh.write(str(hiscore)+' L'+str(level)+' S'+str(speed)+'\n')
+                hiscorefh.close()
+        pscore = 0
+    count += 1
+    levelcount +=1
+

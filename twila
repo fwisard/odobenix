@@ -36,12 +36,15 @@ qth=['paris','berlin','london','glasgow','dublin','riga','moscow','bern','geneva
 
 names=['leo','ben','jim','mike','jon','john','luke','mark','markus','mat','henry','erik','eric','james','bob','bill','will','kurt','heinrich','hugo','luigi','mario','klaus','aron','gunnar','olaf','jack','daniel','dan','luca','tom','noah', 'emil','david','dave','mirko','andrei','sergey','valery','alex','liam','oskar','emir','berat','georges','paul','angus','oliver','jack','omer','leon','mihai','andrea','matteo','peter','finn','anton','kevin','tarik','frank','victor','mohammed','max','rayan','ivan','ali','luis','samuel','ralf','said','juan','jose','diego','neil','ethan','eric','seb','joe','jo','peng','tao','cheng','wei','muhamad','fahd','art','giorgi','hans','malik']
 
+rigs=['ic7000','ic 7200','ts 450','ft 450d','ft 991','ft dx1200','ft 897d','ft 1e','homebrew','ts 590s','ts 2000','ic 7851','ic 9100','ts 480','ft 817nd','pixie 2','kx3','k2','k1','tuna tin 2','argonaut v','ic 706mk2']
+
 # Configuration ends here #####################################################
 
 
 x = 1
 count = 1
 levelcount = 1
+level = 1 
 score =0
 points =0
 pscore = 0 
@@ -70,8 +73,7 @@ def newWord(start=0):
             # same choice as last two. reroll. 
             logging.debug('/!\ same choice, reroll')
 
-parser=argparse.ArgumentParser(description='Trains your CW skills by giving you short sentences and waiting for an answer or a log entry with the most important info.\n
-        \nExamples:\n- It says "name hr is bob", you should enter "bob"\n- It asks "pse rpt age", you should answer with your age.\n- It says "ant is mag loop on the roof", you should enter "mag loop".',epilog='Version '+__version__+' by '+__author__)
+parser=argparse.ArgumentParser(description='Trains your CW skills by giving you short sentences and waiting for an answer or a log entry with the most important info.\n\nExamples:\n- It says "name hr is bob", you should enter "bob"\n- It asks "pse rpt age", you should answer with your age.\n- It says "ant is mag loop on the roof", you should enter "mag loop".',epilog='Version '+__version__+' by '+__author__)
 parser.add_argument('-d',help='debug mode',action='store_true')
 parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int,metavar='FREQ')
 parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
@@ -95,12 +97,15 @@ print("Answer, or log the given info. Type 'q' to quit.\n\n")
 while x == 1 :
     logging.debug('-----')
 
-    alea=random.randint(1,12)
+    alea=random.randint(1,5)
+    om=random.choice(['my friend','dr om','dr '+myname,myname,'om',''])
+
     if alea==1: #name
-        cpuname=random.choice(names)
+        cpuinfo=random.choice(names)
         if random.random()>0.3: # doubling the name is common
             cpuinfo+=' '+cpuinfo
         qso=random.choice(['name hr is '+cpuinfo,'op '+cpuinfo,'my name is '+cpuinfo,'name is '+cpuinfo,'name '+cpuinfo])
+
     elif alea==2: #rst
         if random.random()>0.6: # 599 is unfortunately very common
             cpuinfo=random.choice(['5nn','5nn 5nn','599 599','599 5nn'])
@@ -111,14 +116,43 @@ while x == 1 :
             cpuinfo=random.choice(['4','5'])+str(random.randint(1,9))+str(random.randint(1,9))
             cpuinfo+=' '+cpuinfo #doubling
         qso=random.choice(['ur rst is '+cpuinfo,'ur '+cpuinfo,'rprt is '+cpuinfo,'rst '+cpuinfo])
+
     elif alea==3: #age
         cpuinfo=str(random.randint(10,110))
         qso=random.choice(['age hr '+cpuinfo,'I am '+cpuinfo+' years old','my age is '+cpuinfo+' '+cpuinfo,'age '+cpuinfo+' '+cpuinfo])
 
+    elif alea==4: #qth
+        cpuinfo=random.choice(qth)
+        if random.random()>0.7:
+            cpuinfo='nr '+cpuinfo
+        if random.random()>0.7:
+            cpuinfo+=' '+cpuinfo #doubling
+        qso=random.choice(['qth '+cpuinfo, 'my qth is '+cpuinfo, 'qth is '+cpuinfo, 'my qth '+cpuinfo])
+
+    elif alea==5: #rig
+        cpuinfo=random.choice(rigs)
+        qso=random.choice(['rig hr is '+cpuinfo, 'rig is '+ cpuinfo, 'tx is '+cpuinfo, 'my rig is a '+cpuinfo, 'trx is '+cpuinfo])
+
+    else :
+        logging.debug('oops, not enough categories')
+
+    if random.random()>0.7: #fluff at the beginning 
+        fluff=random.choice(['rr '+om+'= ','all ok = ','ok '+om+' ','fb on ur info = ','fb cpi '+om+' ','tu '])
+        qso=fluff+qso
+    elif random.random()>0.8: #fluff at the end
+        fluff=random.choice([' hi hi',' qsl?', ' bk', ' btu '+om, ' = qru', ' = hw?',' +'])
+        qso+=fluff
+
+    qso='= '+qso
+    logging.debug('qso: %s',qso)
 
 
-    subprocess.run([CW,word,  str(speed), str(freq)])
-    print("Level: {} Score: {}".format(level,pscore))
+
+
+
+
+
+    subprocess.run([CW,qso,  str(speed), str(freq)])
     timea=time.perf_counter()
     
     cmd=input('>? ')
@@ -126,15 +160,20 @@ while x == 1 :
     timeb=time.perf_counter()
     responsetime=timeb-timea
     responsetime=int(responsetime*100)/100
-    logging.debug("Word: %s entered: %s.",word,cmd)
+    logging.debug("Info: %s entered: %s.",cpuinfo,cmd)
     logging.debug("responsetime: %s",responsetime)
 
     if (cmd == 'q') or (cmd=='quit') or (cmd=='exit'):
         subprocess.run([CW,'TU 73',str(speed+5),'380'])
         exit(0)
-    limitgood=0.5+ keybspeed*(len(word)+1)
-    limitavg=1.4+ keybspeed*(len(word)+1)
-    if cmd == word:
+    limitgood=0.5+ keybspeed*(len(cpuinfo)+1)
+    limitavg=1.4+ keybspeed*(len(cpuinfo)+1)
+    try:
+        if cpuinfo.split(' ')[0] == cpuinfo.split(' ')[1] : #info has been doubled, take only one
+            cpuinfo=cpuinfo.split(' ')[0]
+    except:
+        pass
+    if cmd == cpuinfo:
         if responsetime <= limitgood:
             print("    Correct.")
             logging.debug("ok, limit was %s", limitgood)
@@ -154,7 +193,7 @@ while x == 1 :
         pscore += points * level * (speed ** 1.5) / 100
         pscore = int(pscore)
     else:
-        print("Wrong, it was {}.".format(word))
+        print("Wrong, it was {}.".format(cpuinfo))
     if levelcount >= 9:
         print("########################################")
         print("#   Score: {}    Hi-Score: {}".format(pscore,hiscore))
@@ -176,10 +215,10 @@ while x == 1 :
         score=0
         if pscore > hiscore:
             hiscore=pscore
-            with open(HISCOREFILE,'a') as hiscorefh:
-                hiscorefh.write(datetime.datetime.now().isoformat()+' ')
-                hiscorefh.write(str(hiscore)+' L'+str(level)+' S'+str(speed)+'\n')
-                hiscorefh.close()
+            # with open(HISCOREFILE,'a') as hiscorefh:
+            #     hiscorefh.write(datetime.datetime.now().isoformat()+' ')
+            #     hiscorefh.write(str(hiscore)+' L'+str(level)+' S'+str(speed)+'\n')
+            #     hiscorefh.close()
         pscore = 0
     count += 1
     levelcount +=1

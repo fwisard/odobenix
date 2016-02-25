@@ -24,11 +24,9 @@ HISCOREFILE='hiscore'
 freq=400 # Default sidetone, in Hz. Change this according to your taste.
 speed=18 # Default speed, in wpm. Change this according to your taste/skill.
 
-mybrand='icom'
-mytx='ic 7200'
+myrig='ic 7200'
 myage=43
 myname='Frank'
-mypwr=12
 
 CW='./cw' # path and name of the morse generator executable. 
 
@@ -78,6 +76,7 @@ parser=argparse.ArgumentParser(description='Trains your CW skills by giving you 
 parser.add_argument('-d',help='debug mode',action='store_true')
 parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int,metavar='FREQ')
 parser.add_argument('-x',help='enable strict mode',action='store_true')
+parser.add_argument('-a',help='ask questions too',action='store_true')
 parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
 args=parser.parse_args()
 
@@ -99,7 +98,10 @@ print("Answer, or log the given info. Type 'q' to quit.\n\n")
 while x == 1 :
     logging.debug('-----')
 
-    alea=random.randint(1,5)
+    alea=random.randint(1,6)
+    if args.a:
+        alea=random.randint(1,9) # more choices since we ask questions too
+
     om=random.choice(['my friend','dr om','dr '+myname,myname,'om',''])
 
     if alea==1: #name
@@ -139,6 +141,23 @@ while x == 1 :
         cpuinfo=random.choice(rigs)
         qso=random.choice(['rig hr is '+cpuinfo, 'rig is '+ cpuinfo, 'tx is '+cpuinfo, 'my rig is a '+cpuinfo, 'trx is '+cpuinfo])
         cat='rig'
+    elif alea==6: #ant
+        cpuinfo=random.choice(ant)
+        qso=random.choice(['ant is '+cpuinfo, 'ant hr '+cpuinfo, 'ant hr is '+cpuinfo, '1tt w in '+cpuinfo,cpuinfo+' at '+random.randint(3,30)+'m agl','ant '+cpuinfo+' at '+random.randint(2,30)+'m abv roof'])
+        cat='ant'
+    elif alea==7: #ask name
+        cpuinfo=myname
+        cat='my name'
+        qso=random.choice(['pse rpt ur name','name agn?','ur name pse','ur name?','pse name agn?'])
+    elif alea==8: #ask age
+        cpuinfo=myage
+        cat='my age'
+        qso=random.choice(['pse rpt ur age','ur age agn?','hw old r u?','hw old agn?','ur age pse'])
+    elif alea==9: #ask rig
+        cpuinfo=myrig
+        cat='my rig'
+        qso=random.choice(['ur rig agn?','pse rpt rig','rpt rig pse','rig?'])
+
 
     else :
         logging.debug('oops, not enough categories')

@@ -51,6 +51,7 @@ pscore = 0
 hiscore =0
 nothrice=['xyzzy','xyzzy']
 recent=0
+cat='' #category. 
 
 def newWord(start=0):
     global word
@@ -76,6 +77,8 @@ def newWord(start=0):
 parser=argparse.ArgumentParser(description='Trains your CW skills by giving you short sentences and waiting for an answer or a log entry with the most important info.\n\nExamples:\n- It says "name hr is bob", you should enter "bob"\n- It asks "pse rpt age", you should answer with your age.\n- It says "ant is mag loop on the roof", you should enter "mag loop".',epilog='Version '+__version__+' by '+__author__)
 parser.add_argument('-d',help='debug mode',action='store_true')
 parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',default=freq,type=int,metavar='FREQ')
+#TODO: check if strict or allows to only recognize the category
+
 parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
 args=parser.parse_args()
 
@@ -120,6 +123,7 @@ while x == 1 :
     elif alea==3: #age
         cpuinfo=str(random.randint(10,110))
         qso=random.choice(['age hr '+cpuinfo,'I am '+cpuinfo+' years old','my age is '+cpuinfo+' '+cpuinfo,'age '+cpuinfo+' '+cpuinfo])
+        cat='age'
 
     elif alea==4: #qth
         cpuinfo=random.choice(qth)
@@ -128,10 +132,12 @@ while x == 1 :
         if random.random()>0.7:
             cpuinfo+=' '+cpuinfo #doubling
         qso=random.choice(['qth '+cpuinfo, 'my qth is '+cpuinfo, 'qth is '+cpuinfo, 'my qth '+cpuinfo])
+        cat='qth'
 
     elif alea==5: #rig
         cpuinfo=random.choice(rigs)
         qso=random.choice(['rig hr is '+cpuinfo, 'rig is '+ cpuinfo, 'tx is '+cpuinfo, 'my rig is a '+cpuinfo, 'trx is '+cpuinfo])
+        cat='rig'
 
     else :
         logging.debug('oops, not enough categories')
@@ -173,6 +179,9 @@ while x == 1 :
             cpuinfo=cpuinfo.split(' ')[0]
     except:
         pass
+    if cpuinfo == "5nn" and cmd== "599": #accept 599 instead of 5nn
+        cpuinfo = "599"
+
     if cmd == cpuinfo:
         if responsetime <= limitgood:
             print("    Correct.")

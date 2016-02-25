@@ -36,6 +36,8 @@ names=['leo','ben','jim','mike','jon','john','luke','mark','markus','mat','henry
 
 rigs=['ic7000','ic 7200','ts 450','ft 450d','ft 991','ft dx1200','ft 897d','ft 1e','homebrew','ts 590s','ts 2000','ic 7851','ic 9100','ts 480','ft 817nd','pixie 2','kx3','k2','k1','tuna tin 2','argonaut v','ic 706mk2']
 
+# ant=['dipole','3el','quad','ef']
+
 # Configuration ends here #####################################################
 
 
@@ -98,9 +100,9 @@ print("Answer, or log the given info. Type 'q' to quit.\n\n")
 while x == 1 :
     logging.debug('-----')
 
-    alea=random.randint(1,6)
+    alea=random.randint(1,5)
     if args.a:
-        alea=random.randint(1,9) # more choices since we ask questions too
+        alea=random.randint(1,8) # more choices since we ask questions too
 
     om=random.choice(['my friend','dr om','dr '+myname,myname,'om',''])
 
@@ -141,19 +143,19 @@ while x == 1 :
         cpuinfo=random.choice(rigs)
         qso=random.choice(['rig hr is '+cpuinfo, 'rig is '+ cpuinfo, 'tx is '+cpuinfo, 'my rig is a '+cpuinfo, 'trx is '+cpuinfo])
         cat='rig'
-    elif alea==6: #ant
-        cpuinfo=random.choice(ant)
-        qso=random.choice(['ant is '+cpuinfo, 'ant hr '+cpuinfo, 'ant hr is '+cpuinfo, '1tt w in '+cpuinfo,cpuinfo+' at '+random.randint(3,30)+'m agl','ant '+cpuinfo+' at '+random.randint(2,30)+'m abv roof'])
-        cat='ant'
-    elif alea==7: #ask name
+    # elif alea==6: #ant
+    #     cpuinfo=random.choice(ant)
+    #     qso=random.choice(['ant is '+cpuinfo, 'ant hr '+cpuinfo, 'ant hr is '+cpuinfo, '1tt w in '+cpuinfo,cpuinfo+' at '+random.randint(3,30)+'m agl','ant '+cpuinfo+' at '+random.randint(2,30)+'m abv roof'])
+    #     cat='ant'
+    elif alea==6: #ask name
         cpuinfo=myname
         cat='my name'
         qso=random.choice(['pse rpt ur name','name agn?','ur name pse','ur name?','pse name agn?'])
-    elif alea==8: #ask age
+    elif alea==7: #ask age
         cpuinfo=myage
         cat='my age'
         qso=random.choice(['pse rpt ur age','ur age agn?','hw old r u?','hw old agn?','ur age pse'])
-    elif alea==9: #ask rig
+    elif alea==8: #ask rig
         cpuinfo=myrig
         cat='my rig'
         qso=random.choice(['ur rig agn?','pse rpt rig','rpt rig pse','rig?'])

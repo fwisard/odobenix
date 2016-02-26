@@ -54,6 +54,26 @@ Recognized commands: qrq, qrs, rpt, quit, help.
 
 Default values may be changed by editing the configuration section at the top of the file.
 
+##twila
+Twila stands for "That's What I'd Log/Answer", and aims to train your head copying skills. Type 'q' to quit.
+
+    usage: twila [-h] [-d] [-f FREQ] [-x] [-a] [-s SPEED] [-c CAT]
+
+    Trains your CW skills by giving you short sentences and waiting for an answer
+    or a log entry with the most important info. Examples: - It says "name hr is
+    bob", you should enter "bob" - It asks "pse rpt age", you should answer with
+    your age. - It says "ant is mag loop on the roof", you should enter "mag
+    loop".
+
+    optional arguments:
+      -h, --help  show this help message and exit
+      -d          debug mode
+      -f FREQ     frequency (300-1400) (default: 400)
+      -x          enable strict mode
+      -a          ask questions too
+      -s SPEED    speed in wpm (5-100) (default: 18)
+      -c CAT      focus on only one category (rst,name)
+
 ## ...
 More to come...  
 

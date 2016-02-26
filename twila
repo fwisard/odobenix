@@ -46,36 +46,8 @@ myrig=myrig.casefold()
 
 x = 1
 count = 1
-levelcount = 1
-level = 1 
 score =0
-points =0
-pscore = 0 
-hiscore =0
-nothrice=['xyzzy','xyzzy']
-recent=0
 cat='' #category. 
-
-def newWord(start=0):
-    global word
-    global nothrice
-    f=1
-    while f == 1:
-        word=random.choice(words[start:level])
-        if word != nothrice[1] : # is it the same word as the last one?
-            f=0
-            logging.debug('OK diff than last choice')
-            nothrice[0]=nothrice[1]
-            nothrice[1]=word
-        elif word != nothrice[0] and not args.n: #do we allow twice in a row?
-            #TODO: we should allow twice in a row at level 2
-            f=0
-            logging.debug('OK diff than 2 previous choices')
-            nothrice[0]=nothrice[1]
-            nothrice[1]=word
-        else:
-            # same choice as last two. reroll. 
-            logging.debug('/!\ same choice, reroll')
 
 parser=argparse.ArgumentParser(description='Trains your CW skills by giving you short sentences and waiting for an answer or a log entry with the most important info.\n\nExamples:\n- It says "name hr is bob", you should enter "bob"\n- It asks "pse rpt age", you should answer with your age.\n- It says "ant is mag loop on the roof", you should enter "mag loop".',epilog='Version '+__version__+' by '+__author__)
 parser.add_argument('-d',help='debug mode',action='store_true')
@@ -183,27 +155,16 @@ while x == 1 :
     logging.debug('qso: %s',qso)
 
 
-
-
-
-
-
     subprocess.run([CW,qso,  str(speed), str(freq)])
-    timea=time.perf_counter()
     
     cmd=input('>? ')
     cmd=cmd.casefold()
-    timeb=time.perf_counter()
-    responsetime=timeb-timea
-    responsetime=int(responsetime*100)/100
     logging.debug("Info: %s entered: %s.",cpuinfo,cmd)
-    logging.debug("responsetime: %s",responsetime)
 
     if (cmd == 'q') or (cmd=='quit') or (cmd=='exit'):
         subprocess.run([CW,'TU 73',str(speed+5),'380'])
+        print("{}/{} correct answers".format(score,count))
         exit(0)
-    limitgood=0.5+ keybspeed*(len(cpuinfo)+1)
-    limitavg=1.4+ keybspeed*(len(cpuinfo)+1)
     try:
         if cpuinfo.split(' ')[0] == cpuinfo.split(' ')[1] : #info has been doubled, take only one
             cpuinfo=cpuinfo.split(' ')[0]
@@ -213,57 +174,11 @@ while x == 1 :
         cpuinfo = "599"
 
     if cmd == cpuinfo or cmd == cat:
-        if responsetime <= limitgood:
-
-            subprocess.run([CW,'c',  str(speed), str(freq)])
-            print("    Correct.")
-            logging.debug("ok, limit was %s", limitgood)
-            score += 10
-            points = int(1000 * (limitgood-responsetime))
-        elif responsetime <= limitavg:
-            print("    Correct, but slow.")
-            subprocess.run([CW,'c',  str(speed), str(freq)])
-            logging.debug("bit slow, limit was %s", limitgood)
-            score += 8
-            points = int(100 * (limitavg-responsetime))
-        else:
-            subprocess.run([CW,'c',  str(speed), str(freq)])
-            print("    Too slow.")
-            logging.debug("too slow, limit was %s",limitavg)
-            score += 2
-            points = int(40/(responsetime**2) )
-        logging.debug("Points: %s score: %s",points,score)
-        pscore += points * level * (speed ** 1.5) / 100
-        pscore = int(pscore)
+        subprocess.run([CW,'c',  str(speed), str(freq)])
+        print("    Correct.")
+        score += 1
     else:
         subprocess.run([CW,'?',  str(speed), str(freq)])
         print("Wrong, it was {}.".format(cpuinfo))
-    if levelcount >= 9:
-        print("########################################")
-        print("#   Score: {}    Hi-Score: {}".format(pscore,hiscore))
-        logging.debug("Score : %s Hiscore : %s",pscore,hiscore)
-        if score > 71: #7.9* maxlevelcount
-            if level < maxlevel:
-                level += 1
-                print("#   Up to level {}.".format(level))
-            else:
-                print("#   Max level, you're the boss!")
-        elif score < 27: # 3* maxlevelcount
-            if level < 3:
-                print("#   Come on...")
-            else:
-                level -= 1
-                print("#   Down to level {}.".format(level))
-        print("########################################")
-        levelcount=1
-        score=0
-        if pscore > hiscore:
-            hiscore=pscore
-            # with open(HISCOREFILE,'a') as hiscorefh:
-            #     hiscorefh.write(datetime.datetime.now().isoformat()+' ')
-            #     hiscorefh.write(str(hiscore)+' L'+str(level)+' S'+str(speed)+'\n')
-            #     hiscorefh.close()
-        pscore = 0
     count += 1
-    levelcount +=1
 

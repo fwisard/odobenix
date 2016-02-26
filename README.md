@@ -55,7 +55,7 @@ Recognized commands: qrq, qrs, rpt, quit, help.
 Default values may be changed by editing the configuration section at the top of the file.
 
 ##twila
-Twila stands for "That's What I'd Log/Answer", and aims to train your head copying skills. Type 'q' to quit.
+Twila stands for "That's What I'd Log/Answer", and aims to train your head copying skills, via simulation of parts of a typical QSO. Type 'q' to quit.
 
     usage: twila [-h] [-d] [-f FREQ] [-x] [-a] [-s SPEED] [-c CAT]
 

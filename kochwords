@@ -49,13 +49,12 @@ def newWord(start=0):
     f=1
     while f == 1:
         word=random.choice(words[start:level])
-        if word != nothrice[1] : # is it the same word as the last one?
+        if word != nothrice[1] and level != 2 : # is it the same word as the last one?
             f=0
             logging.debug('OK diff than last choice')
             nothrice[0]=nothrice[1]
             nothrice[1]=word
-        elif word != nothrice[0] and not args.n: #do we allow twice in a row?
-            #TODO: we should allow twice in a row at level 2
+        elif word != nothrice[0] and not args.n : #do we allow twice in a row?
             f=0
             logging.debug('OK diff than 2 previous choices')
             nothrice[0]=nothrice[1]

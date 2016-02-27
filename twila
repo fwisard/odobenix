@@ -45,7 +45,7 @@ myname=myname.casefold()
 myrig=myrig.casefold()
 
 x = 1
-count = 1
+count = 0
 score =0
 cat='' #category. 
 
@@ -163,7 +163,7 @@ while x == 1 :
 
     if (cmd == 'q') or (cmd=='quit') or (cmd=='exit'):
         subprocess.run([CW,'TU 73',str(speed+5),'380'])
-        print("{}/{} correct answers".format(score,count))
+        print("Correct answers: {}/{}".format(score,count))
         exit(0)
     try:
         if cpuinfo.split(' ')[0] == cpuinfo.split(' ')[1] : #info has been doubled, take only one

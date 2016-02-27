@@ -168,6 +168,10 @@ while x == 1 :
     try:
         if cpuinfo.split(' ')[0] == cpuinfo.split(' ')[1] : #info has been doubled, take only one
             cpuinfo=cpuinfo.split(' ')[0]
+        elif cpuinfo.split(' ')[0] == 'nr': #qth with a 'nr' had beed doubled.
+            cpuinfo=cpuinfo.split(' ')[1] 
+            if cmd.split(' ')[0] == 'nr':
+                cmd=cmd.split(' ')[1] #get rid of the 'nr' in qth logs
     except:
         pass
     if "5nn" in cpuinfo and cmd== "599": #accept 599 instead of 5nn

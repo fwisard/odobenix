@@ -1,0 +1,7 @@
+[DEFAULT]
+keybspeed: 0.16
+hiscorefile: hiscore
+freq: 400
+speed: 18
+level: 2
+CWbin: ./cw

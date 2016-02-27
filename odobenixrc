@@ -5,7 +5,7 @@
 keybspeed: 0.16
 
 # Where do we keep the scores
-hiscorefile: ~/hiscore
+hiscorefile: hiscore
 
 # Sidetone frequency, in Hz
 freq: 400

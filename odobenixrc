@@ -1,7 +1,28 @@
 [DEFAULT]
+
+# keyboard speed. Typing speed, time per key in seconds. 0.16 for average touch typists, 0.25 for typical computer users, 0.12 for professional typers. Formula: 10/wpm
+
 keybspeed: 0.16
-hiscorefile: hiscore
+
+# Where do we keep the scores
+hiscorefile: ~/hiscore
+
+# Sidetone frequency, in Hz
 freq: 400
+
+# Default speed, in wpm. Change this according to your taste/skill
 speed: 18
+
+# Starting level
 level: 2
+
+# Where is the text-to-audio-morse utility
 CWbin: ./cw
+
+[Twila]
+
+#The following data is used by Twila to ask you questions. Feel free not to put your real info if you're somewhat concerned.
+
+myage: 43
+myname: Frank
+myrig: ic7200

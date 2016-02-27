@@ -11,25 +11,30 @@ import datetime
 import argparse
 import os.path
 import os
+import configparser
+import traceback
 
 __author__ = "Francois Wisard (HB9FXW)"
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
-# Configuration begins here ##################################################
 
-keybspeed = 0.16 #typing speed, time per key in seconds. 0.16 for average touch typists, 0.25 for typical computer users, 0.12 for professional typers. Formula: 10/wpm
 
-HISCOREFILE='hiscore'
-
-freq=400 # Default sidetone, in Hz. Change this according to your taste.
-speed=18 # Default speed, in wpm. Change this according to your taste/skill.
-
-myrig='ic7200'
-myage='43'
-myname='frank' 
-
-CW='./cw' # path and name of the morse generator executable. 
-
+try:
+    config=configparser.ConfigParser()
+    config.read(['odobenixrc','/etc/odobenixrc',os.path.expanduser('~/.config/odobenix/odobenixrc'),os.path.expanduser('~/.odobenixrc')])
+    conf=config['DEFAULT']
+    keybspeed=conf.getfloat('keybspeed')
+    freq=conf.getint('freq')
+    speed=conf.getint('speed')
+    myname=config['Twila']['myname']
+    myrig=config['Twila']['myrig']
+    myage=config['Twila'].getint('myage')
+    CW=conf['CWbin']
+except Exception:
+    print("\nError reading the configuration file:\n")
+    traceback.print_exc()
+    exit(2)
+    
 qth=['paris','berlin','london','glasgow','dublin','riga','moscow','bern','geneva','lyon','bonn','madrid','porto','lisbon','antwerp','athens','barcelona','birmingham','bremen','belgrade','bristol','brussels','bucharest','budapest','cardiff','copenhagen','donetsk','frankfurt','the hague','hamburg','helsinki','istanbul','kazan','kharkiv','kyiv','krakow','leeds','bradford', 'lille','tournai','liverpool','lodz','manchester','marseille','milan','minsk','munich','naples','nice','nottingham','nizhniy novgorod','nuremberg','odesa','oslo','perm','portsmouth','southampton','prague','cologne','rome','rotterdam','saint petersburg','samara','saratov','seville','sofia','stockholm','sheffield','stuttgart','thessaloniki','turin','newcastle','ufa','valencia','vienna','volgograd','warsaw','zagreb','zurich']
 
 names=['leo','ben','jim','mike','jon','john','luke','mark','markus','mat','henry','erik','eric','james','bob','bill','will','kurt','heinrich','hugo','luigi','mario','klaus','aron','gunnar','olaf','jack','daniel','dan','luca','tom','noah', 'emil','david','dave','mirko','andrei','sergey','valery','alex','liam','oskar','emir','berat','georges','paul','angus','oliver','jack','omer','leon','mihai','andrea','matteo','peter','finn','anton','kevin','tarik','frank','victor','mohammed','max','rayan','ivan','ali','luis','samuel','ralf','said','juan','jose','diego','neil','ethan','eric','seb','joe','jo','peng','tao','cheng','wei','muhamad','fahd','art','giorgi','hans','malik']

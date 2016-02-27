@@ -36,7 +36,7 @@ The scoring system is adjusted for an average touch typer. 'Hunt & peck' typers 
       -r          recent words have more weight
       -n          no word twice in a row
 
-Default values may be changed by editing the configuration section at the top of the file.
+Default values may be changed by editing the configuration file ('odobenixrc')
 
 ##morsechef   
 A game to improve your morse copying skills. Choose 4 appropriate ingredients among those proposed.
@@ -76,10 +76,10 @@ Twila stands for "That's What I'd Log/Answer", and aims to train your head copyi
       -s SPEED    speed in wpm (5-100) (default: 18)
       -c CAT      focus on only one category (rst,name)
 
-Default values (and your name, age, rig) may be changed by editing the configuration section at the top of the file.
+Default values (and your name, age, rig) may be changed by editing the configuration file ('odobenixrc')
 
 # The future
-* Configuration through configuration file
+* Configuration through configuration file only
 * system-wide install
 * GUI ?
 

@@ -1,5 +1,7 @@
 #Odobenix in a nutshell
-Utilities and games to improve morse skills. Written in C and Python, aimed at linux console users who want to raise their CW speed or head copy. GPL.
+Utilities and games to improve morse skills. Written in C and Python, aimed at linux console users who want to raise their CW speed or head copy. Entirely free (GPL License).
+
+You have to already know your alphabet, numbers, punctuation and prosigns. Callsign recognition training probably won't be implemented since there are already excellent tools out there to train it.
 
 #Programs
 This suite consists of the following software:
@@ -74,7 +76,11 @@ Twila stands for "That's What I'd Log/Answer", and aims to train your head copyi
       -s SPEED    speed in wpm (5-100) (default: 18)
       -c CAT      focus on only one category (rst,name)
 
-## ...
-More to come...  
+Default values (and your name, age, rig) may be changed by editing the configuration section at the top of the file.
+
+# The future
+* Configuration through configuration file
+* system-wide install
+* GUI ?
 
 73 de hb9fxw.

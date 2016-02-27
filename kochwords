@@ -11,11 +11,14 @@ import datetime
 import argparse
 import os.path
 import os
+import configparser
+import traceback
 
 __author__ = "Francois Wisard (HB9FXW)"
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
-# Configuration begins here ##################################################
+
+#configuration now is through a configuration file, but let's keep some configuration here just in case.
 
 keybspeed = 0.16 #typing speed, time per key in seconds. 0.16 for average touch typists, 0.25 for typical computer users, 0.12 for professional typers. Formula: 10/wpm
 
@@ -29,8 +32,21 @@ CW='./cw' # path and name of the morse generator executable.
 # here are the words we train:
 words=['de','qth','hr','ur','my','rig','rst','op','name','rpt','wx','dx','is','es','qso','fer','tu','tnx','tks','qrs','qrq','qrm','qro','qrp','qrn','qsb','cuagn','cul','fb','hny','ok','pse','om','dr','73','agn','ant','pwr','sri','qrz?','qsl?','qsl','via','buro','lotw','direct','call','vert','dipole','beam','g5rv','loop','1ttw','qrz','abt','b4','msg','btu','cfm','condx','on','clr','cpy','nr','cpi','dwn','up','enuf','fone','gm','ga','fist','gud','gp','gb','ham','hpe','hw','some','hw?','mni','nil','nw','qru','559','rprt','ge','to','rcvd','sig','all','stn','temp','ufb','vy','wid','xyl','icom','yaesu','kenwood','home','warm','in','cold','band','579','wire','last','info','frm','but','hot','best','also','watts','snow']
 
-# Configuration ends here #####################################################
-
+try:
+    config=configparser.ConfigParser()
+    config.read(['odobenixrc','/etc/odobenixrc',os.path.expanduser('~/.config/odobenix/odobenixrc'),os.path.expanduser('~/.odobenixrc')])
+    conf=config['DEFAULT']
+    keybspeed=conf.getfloat('keybspeed')
+    HISCOREFILE=conf['hiscorefile']
+    freq=conf.getint('freq')
+    speed=conf.getint('speed')
+    level=conf.getint('level')
+    CW=conf['CWbin']
+except Exception:
+    print("\nError reading the configuration file:\n")
+    traceback.print_exc()
+    exit(2)
+    
 
 maxlevel=len(words)
 x = 1

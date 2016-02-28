@@ -60,7 +60,7 @@ parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',defa
 parser.add_argument('-x',help='enable strict mode',action='store_true')
 parser.add_argument('-a',help='ask questions too',action='store_true')
 parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
-parser.add_argument('-c',help='focus on only one category (rst,name)',type=str,metavar='CAT')
+parser.add_argument('-c',help='focus on only one category (rst,name,age)',type=str,metavar='CAT')
 args=parser.parse_args()
 
 if args.d: 
@@ -91,6 +91,8 @@ while x == 1 :
         alea=2 #not really random anymore ikr
     if args.c=='name':
         alea=1
+    if args.c=='age':
+        alea=3
 
     om=random.choice(['my friend','dr om','dr '+myname,myname,'om',''])
 

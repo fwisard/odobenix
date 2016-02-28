@@ -3,6 +3,8 @@ Utilities and games to improve morse skills. Written in C and Python, aimed at l
 
 You have to already know your alphabet, numbers, punctuation and prosigns. Callsign recognition training probably won't be implemented since there are already excellent tools out there to train it.
 
+Here's [odobenix in action](https://youtu.be/0gcP9oYyubA)
+
 #Programs
 This suite consists of the following software:
 

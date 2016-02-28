@@ -59,7 +59,7 @@ def newWord(start=0):
     f=1
     while f == 1:
         word=random.choice(words[start:level])
-        if word != nothrice[1] and level != 2 : # is it the same word as the last one?
+        if word != nothrice[1] or level == 2 : # is it the same word as the last one? (unless we're lvl 2)
             f=0
             logging.debug('OK diff than last choice')
             nothrice[0]=nothrice[1]

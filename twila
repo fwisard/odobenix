@@ -78,7 +78,8 @@ if not os.path.isfile(CW):
     print("Unable to find the morse generator ({}). Check your install.".format(CW))
     exit(10)
 
-print("Answer, or log the given info. Type 'q' to quit.\n\n")
+print("Answer, or log the most important info given (or just the category if you didn't enable strict mode).\
+        \n\nCategories are: name, rst, rig, age, qth. \n\nType 'q' to quit.\n\n")
 
 while x == 1 :
     logging.debug('-----')
@@ -97,7 +98,7 @@ while x == 1 :
         cpuinfo=random.choice(names)
         if random.random()>0.3: # doubling the name is common
             cpuinfo+=' '+cpuinfo
-        qso=random.choice(['name hr is '+cpuinfo,'op '+cpuinfo,'my name is '+cpuinfo,'name is '+cpuinfo,'name '+cpuinfo])
+        qso=random.choice(['op hr '+cpuinfo,'name hr is '+cpuinfo,'op '+cpuinfo,'my name is '+cpuinfo,'name is '+cpuinfo,'name '+cpuinfo])
         cat='name'
 
     elif alea==2: #rst

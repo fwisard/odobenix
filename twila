@@ -182,7 +182,7 @@ while x == 1 :
     if "5nn" in cpuinfo and cmd== "599": #accept 599 instead of 5nn
         cpuinfo = "599"
 
-    if cmd == cpuinfo or (cmd == cat and ! args.x):
+    if cmd == cpuinfo or (cmd == cat and not  args.x):
         subprocess.run([CW,'c',  str(speed), str(freq)])
         print("    Correct.")
         score += 1

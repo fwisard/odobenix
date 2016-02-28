@@ -69,6 +69,8 @@ if args.d:
 
 if (args.f > 300) and (args.f<1401): 
     freq=args.f
+if args.c:
+    args.x=True
 if (args.s > 5) and (args.s < 101): 
     speed=args.s
 

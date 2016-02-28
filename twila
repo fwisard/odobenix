@@ -96,10 +96,10 @@ while x == 1 :
         if random.random()>0.3: # doubling the name is common
             cpuinfo+=' '+cpuinfo
         qso=random.choice(['name hr is '+cpuinfo,'op '+cpuinfo,'my name is '+cpuinfo,'name is '+cpuinfo,'name '+cpuinfo])
-        cat=''
+        cat='name'
 
     elif alea==2: #rst
-        if random.random()>0.6: # 599 is unfortunately very common
+        if random.random()>0.5: # 599 is unfortunately very common
             cpuinfo=random.choice(['5nn','5nn 5nn','599 599','599 5nn'])
         elif random.random()>0.5: # these should be common too
             cpuinfo=random.choice(['579','559','539'])
@@ -108,7 +108,7 @@ while x == 1 :
             cpuinfo=random.choice(['4','5'])+str(random.randint(1,9))+str(random.randint(1,9))
             cpuinfo+=' '+cpuinfo #doubling
         qso=random.choice(['ur rst is '+cpuinfo,'ur '+cpuinfo,'rprt is '+cpuinfo,'rst '+cpuinfo])
-        cat=''
+        cat='rst'
 
     elif alea==3: #age
         cpuinfo=str(random.randint(10,110))
@@ -182,12 +182,12 @@ while x == 1 :
     if "5nn" in cpuinfo and cmd== "599": #accept 599 instead of 5nn
         cpuinfo = "599"
 
-    if cmd == cpuinfo or cmd == cat:
+    if cmd == cpuinfo or (cmd == cat and ! args.x):
         subprocess.run([CW,'c',  str(speed), str(freq)])
         print("    Correct.")
         score += 1
     else:
         subprocess.run([CW,'?',  str(speed), str(freq)])
-        print("Wrong, it was {}.".format(cpuinfo))
+        print("Wrong, it was {} ({}).".format(cpuinfo, cat))
     count += 1
 

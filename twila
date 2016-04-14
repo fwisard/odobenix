@@ -61,6 +61,7 @@ parser.add_argument('-x',help='enable strict mode',action='store_true')
 parser.add_argument('-a',help='ask questions too',action='store_true')
 parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
 parser.add_argument('-c',help='focus on only one category (rst,name,age)',type=str,metavar='CAT')
+parser.add_argument('-r',help='reveal what was sent',action='store_true')
 args=parser.parse_args()
 
 if args.d: 
@@ -195,4 +196,6 @@ while x == 1 :
         subprocess.run([CW,'?',  str(speed), str(freq)])
         print("Wrong, it was {} ({}).".format(cpuinfo, cat))
     count += 1
+    if args.r:
+        print("({})".format(qso))
 

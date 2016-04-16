@@ -78,6 +78,7 @@ Twila stands for "That's What I'd Log/Answer", and aims to train your head copyi
       -s SPEED    speed in wpm (5-100) (default: 18)
       -c CAT      focus on only one category (rst,name)
       -r          reveal what was sent
+      -v          vary the frequency and the speed
 
 Default values (and your name, age, rig) may be changed by editing the configuration file ('odobenixrc')
 

@@ -62,6 +62,7 @@ parser.add_argument('-a',help='ask questions too',action='store_true')
 parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
 parser.add_argument('-c',help='focus on only one category (rst,name,age)',type=str,metavar='CAT')
 parser.add_argument('-r',help='reveal what was sent',action='store_true')
+parser.add_argument('-v',help='vary the frequency and the speed',action='store_true')
 args=parser.parse_args()
 
 if args.d: 
@@ -166,7 +167,12 @@ while x == 1 :
     logging.debug('qso: %s',qso)
 
 
-    subprocess.run([CW,qso,  str(speed), str(freq)])
+    if args.v:
+# vary speed by 10% up max, 20% down max
+        speedvariation=random.randint(-2*int(speed/10),int(speed/10))
+        subprocess.run([CW,qso, str(speed+speedvariation), str(freq+random.randint(-100,200))])
+    else:
+        subprocess.run([CW,qso,  str(speed), str(freq)])
     
     cmd=input('>? ')
     cmd=cmd.casefold()
@@ -197,5 +203,5 @@ while x == 1 :
         print("Wrong, it was {} ({}).".format(cpuinfo, cat))
     count += 1
     if args.r:
-        print("({})".format(qso))
+        print("({}, at {}wpm)".format(qso,str(speed+speedvariation)))
 

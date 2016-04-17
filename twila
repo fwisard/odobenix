@@ -15,7 +15,7 @@ import configparser
 import traceback
 
 __author__ = "Francois Wisard (HB9FXW)"
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 
 

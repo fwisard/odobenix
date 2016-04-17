@@ -117,7 +117,7 @@ print("Answer, or log the most important info given (or just the category if you
 while x == 1 :
     logging.debug('-----')
 
-    alea=random.randint(1,5)
+    alea=random.randint(1,6)
     if args.a:
         alea=random.randint(1,9) # more choices since we ask questions too
     if args.c=='rst':
@@ -201,13 +201,13 @@ while x == 1 :
 
 
     if cat != 'call': 
-        qso='= '+qso
         if random.random()>0.7: #fluff at the beginning 
             fluff=random.choice(['rr '+om+'= ','all ok = ','ok '+om+' ','fb on ur info = ','fb cpi '+om+' ','tu '])
             qso=fluff+qso
         elif random.random()>0.8: #fluff at the end
             fluff=random.choice([' hi hi',' qsl?', ' bk', ' btu '+om, ' = qru', ' = hw?',' +'])
             qso+=fluff
+        qso='= '+qso
     logging.debug('qso: %s',qso)
 
 

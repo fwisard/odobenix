@@ -169,7 +169,12 @@ while x == 1 :
 
     if args.v:
 # vary speed by 10% up max, 20% down max
-        speedvariation=random.randint(-2*int(speed/10),int(speed/10))
+        if random.random()>0.5:
+            speedvariation=random.randint(-2*int(speed/10),int(speed/10))
+        elif random.random()<0.2:  #1 in 10
+            speedvariation=1
+        else:
+            speedvariation=0
         subprocess.run([CW,qso, str(speed+speedvariation), str(freq+random.randint(-100,200))])
     else:
         subprocess.run([CW,qso,  str(speed), str(freq)])

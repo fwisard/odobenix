@@ -23,6 +23,7 @@ CWbin: ./cw
 
 #The following data is used by Twila to ask you questions. Feel free not to put your real info if you're somewhat concerned.
 
+mycall: hb9fxw
 myage: 43
 myname: zeb
 myrig: ic7200

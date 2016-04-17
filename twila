@@ -91,7 +91,7 @@ parser.add_argument('-f',help='frequency (300-1400) (default: %(default)s)',defa
 parser.add_argument('-x',help='enable strict mode',action='store_true')
 parser.add_argument('-a',help='ask questions too',action='store_true')
 parser.add_argument('-s',help='speed in wpm (5-100) (default: %(default)s)',default=speed,type=int,metavar='SPEED')
-parser.add_argument('-c',help='focus on only one category (rst,name,age)',type=str,metavar='CAT')
+parser.add_argument('-c',help='focus on only one category (rst,name,age,qth,call)',type=str,metavar='CAT')
 parser.add_argument('-r',help='reveal what was sent',action='store_true')
 parser.add_argument('-v',help='vary the frequency and the speed',action='store_true')
 args=parser.parse_args()
@@ -119,13 +119,15 @@ while x == 1 :
 
     alea=random.randint(1,5)
     if args.a:
-        alea=random.randint(1,8) # more choices since we ask questions too
+        alea=random.randint(1,9) # more choices since we ask questions too
     if args.c=='rst':
         alea=2 #not really random anymore ikr
     if args.c=='name':
         alea=1
     if args.c=='age':
         alea=3
+    if args.c=='qth':
+        alea=4
     if args.c=='call':
         alea=6
 

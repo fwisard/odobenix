@@ -76,7 +76,7 @@ Twila stands for "That's What I'd Log/Answer", and aims to train your head copyi
       -x          enable strict mode
       -a          ask questions too
       -s SPEED    speed in wpm (5-100) (default: 18)
-      -c CAT      focus on only one category (rst,name)
+      -c CAT      focus on only one category (rst,name,age,qth,call)
       -r          reveal what was sent
       -v          vary the frequency and the speed
 

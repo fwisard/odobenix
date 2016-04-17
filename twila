@@ -28,6 +28,7 @@ try:
     speed=conf.getint('speed')
     myname=config['Twila']['myname']
     myrig=config['Twila']['myrig']
+    mycall=config['Twila']['mycall']
     myage=config['Twila'].getint('myage')
     CW=conf['CWbin']
 except Exception:
@@ -45,14 +46,44 @@ rigs=['ic7000','ic 7200','ts 450','ft 450d','ft 991','ft dx1200','ft 897d','ft 1
 
 # Configuration ends here #####################################################
 
+def hiscall():
+    filename="prefixes"
+    fileh = open(filename,'r')
+
+    #Get the total file size
+    file_size = os.stat(filename)[6]
+
+    while 1:
+          #Seek to a place in the file which is a random distance away
+          #Mod by file size so that it wraps around to the beginning
+          fileh.seek((fileh.tell()+random.randint(0,file_size-1))%file_size)
+
+          #dont use the first readline since it may fall in the middle of a line
+          fileh.readline()
+          #this will return the next (complete) line from the file
+          line = fileh.readline()
+          line= line.rstrip()
+          line=line.casefold()
+          #here is your random line in the file
+          logging.debug('line: %s',line)
+
+
+          nbchars=random.choice([1,2,2,3,3,3,3,3,3,3])
+          suffix=''
+          for i in range(0,nbchars):
+              suffix+=chr(random.randint(97,122))
+          logging.debug('suffix: %s',suffix)
+          return line+suffix+' '+line+suffix
 
 myname=myname.casefold()
 myrig=myrig.casefold()
+mycall=mycall.casefold()
 
 x = 1
 count = 0
 score =0
 cat='' #category. 
+speedvariation=0
 
 parser=argparse.ArgumentParser(description='Trains your CW skills by giving you short sentences and waiting for an answer or a log entry with the most important info.\n\nExamples:\n- It says "name hr is bob", you should enter "bob"\n- It asks "pse rpt age", you should answer with your age.\n- It says "ant is mag loop on the roof", you should enter "mag loop".',epilog='Version '+__version__+' by '+__author__)
 parser.add_argument('-d',help='debug mode',action='store_true')
@@ -81,7 +112,7 @@ if not os.path.isfile(CW):
     exit(10)
 
 print("Answer, or log the most important info given (or just the category if you didn't enable strict mode).\
-        \n\nCategories are: name, rst, rig, age, qth. \n\nType 'q' to quit.\n\n")
+        \n\nCategories are: name, rst, rig, age, qth, call. \n\nType 'q' to quit.\n\n")
 
 while x == 1 :
     logging.debug('-----')
@@ -95,6 +126,8 @@ while x == 1 :
         alea=1
     if args.c=='age':
         alea=3
+    if args.c=='call':
+        alea=6
 
     om=random.choice(['my friend','dr om','dr '+myname,myname,'om',''])
 
@@ -135,19 +168,27 @@ while x == 1 :
         cpuinfo=random.choice(rigs)
         qso=random.choice(['rig hr is '+cpuinfo, 'rig is '+ cpuinfo, 'tx is '+cpuinfo, 'my rig is a '+cpuinfo, 'trx is '+cpuinfo])
         cat='rig'
+    elif alea==6: #call
+        cpuinfo=hiscall()
+        cat='call'
+        qso=random.choice(['de '+cpuinfo,mycall+' de '+cpuinfo, cpuinfo])
+        if random.random()>0.3:
+            qso+=' k'
+        else:
+            qso+=' +'
     # elif alea==6: #ant
     #     cpuinfo=random.choice(ant)
     #     qso=random.choice(['ant is '+cpuinfo, 'ant hr '+cpuinfo, 'ant hr is '+cpuinfo, '1tt w in '+cpuinfo,cpuinfo+' at '+random.randint(3,30)+'m agl','ant '+cpuinfo+' at '+random.randint(2,30)+'m abv roof'])
     #     cat='ant'
-    elif alea==6: #ask name
+    elif alea==7: #ask name
         cpuinfo=myname
         cat='my name'
         qso=random.choice(['pse rpt ur name','name agn?','ur name pse','ur name?','pse name agn?'])
-    elif alea==7: #ask age
+    elif alea==8: #ask age
         cpuinfo=myage
         cat='my age'
         qso=random.choice(['pse rpt ur age','ur age agn?','hw old r u?','hw old agn?','ur age pse'])
-    elif alea==8: #ask rig
+    elif alea==9: #ask rig
         cpuinfo=myrig
         cat='my rig'
         qso=random.choice(['ur rig agn?','pse rpt rig','rpt rig pse','rig?'])
@@ -156,14 +197,15 @@ while x == 1 :
     else :
         logging.debug('oops, not enough categories')
 
-    if random.random()>0.7: #fluff at the beginning 
-        fluff=random.choice(['rr '+om+'= ','all ok = ','ok '+om+' ','fb on ur info = ','fb cpi '+om+' ','tu '])
-        qso=fluff+qso
-    elif random.random()>0.8: #fluff at the end
-        fluff=random.choice([' hi hi',' qsl?', ' bk', ' btu '+om, ' = qru', ' = hw?',' +'])
-        qso+=fluff
 
-    qso='= '+qso
+    if cat != 'call': 
+        qso='= '+qso
+        if random.random()>0.7: #fluff at the beginning 
+            fluff=random.choice(['rr '+om+'= ','all ok = ','ok '+om+' ','fb on ur info = ','fb cpi '+om+' ','tu '])
+            qso=fluff+qso
+        elif random.random()>0.8: #fluff at the end
+            fluff=random.choice([' hi hi',' qsl?', ' bk', ' btu '+om, ' = qru', ' = hw?',' +'])
+            qso+=fluff
     logging.debug('qso: %s',qso)
 
 
